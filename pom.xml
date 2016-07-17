@@ -4,7 +4,7 @@
     <groupId>com.compomics</groupId>
     <artifactId>compomics-crowd</artifactId>
     <version>0.0.1</version>
-    <packaging>jar</packaging>
+       <packaging>pom</packaging>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -38,27 +38,15 @@
     </build>
     <repositories>
         <repository>
-            <id>ebi-repo</id>
-            <name>The EBI Maven 2 repository</name>
-            <url>http://www.ebi.ac.uk/~maven/m2repo</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-        <repository>
-            <id>genesis-maven-repo</id>
-            <name>Genesis maven repository</name>
-            <url>http://genesis.UGent.be/maven</url>
-            <layout>default</layout>
-        </repository>
-        <repository>
             <id>genesis-maven2-repository</id>
             <name>Genesis maven2 repository</name>
             <url>http://genesis.UGent.be/maven2</url>
             <layout>default</layout>
+        </repository>
+        <repository>
+            <id>ebi-repo</id>
+            <name>The EBI internal repository</name>
+            <url>http://www.ebi.ac.uk/~maven/m2repo</url>
         </repository>
     </repositories>
     <dependencies>
@@ -68,6 +56,16 @@
             <version>1.2.1</version>
             <type>jar</type>
         </dependency>
+        <dependency>
+            <groupId>com.compomics</groupId>
+            <artifactId>Pladipus-core</artifactId>
+            <version>1.2.1</version>
+            <type>jar</type>
+        </dependency>
     </dependencies>
     <name>compomics-crowd</name>
+    <modules>
+        <module>compomics-crowd-core</module>
+        <module>compomics-crowd-screensaver</module>
+    </modules>
 </project>
