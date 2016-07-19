@@ -7,6 +7,16 @@ package com.compomics.compomicscrowd.pladiquest.view;
 
 import com.compomics.compomicscrowd.pladiquest.control.input.UserInput;
 import com.compomics.compomicscrowd.pladiquest.control.output.OutputChannel;
+import java.awt.Color;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
+import javax.swing.text.html.HTMLDocument;
+import javax.swing.text.html.HTMLEditorKit;
 
 /**
  *
@@ -14,11 +24,29 @@ import com.compomics.compomicscrowd.pladiquest.control.output.OutputChannel;
  */
 public class PladiQuestHUD extends javax.swing.JFrame implements UserInput, OutputChannel {
 
+    private HTMLDocument doc;
+    private SimpleAttributeSet keyWord;
+    private HTMLEditorKit editorKit;
+
     /**
      * Creates new form PladiQuestHUD
      */
     public PladiQuestHUD() {
         initComponents();
+        initTextPane();
+    }
+
+    private void initTextPane() {
+        textOutputPane.setContentType("text/html");
+        doc = (HTMLDocument) textOutputPane.getDocument();
+//  Define a keyword attribute
+        keyWord = new SimpleAttributeSet();
+        StyleConstants.setForeground(keyWord, Color.RED);
+        StyleConstants.setBackground(keyWord, Color.YELLOW);
+        StyleConstants.setBold(keyWord, true);
+
+        textOutputPane.setText("<html></html>");
+        editorKit = (HTMLEditorKit) textOutputPane.getEditorKit();
     }
 
     /**
@@ -31,8 +59,6 @@ public class PladiQuestHUD extends javax.swing.JFrame implements UserInput, Outp
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        outputTextArea = new javax.swing.JTextArea();
         tfAction = new javax.swing.JTextField();
         btnDoAction = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
@@ -40,18 +66,20 @@ public class PladiQuestHUD extends javax.swing.JFrame implements UserInput, Outp
         btnLeft = new javax.swing.JButton();
         btnRight = new javax.swing.JButton();
         btnDown = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        textOutputPane = new javax.swing.JTextPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
-        outputTextArea.setColumns(20);
-        outputTextArea.setLineWrap(true);
-        outputTextArea.setRows(5);
-        outputTextArea.setWrapStyleWord(true);
-        jScrollPane1.setViewportView(outputTextArea);
-
+        tfAction.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         tfAction.setText("<Type Action Here>");
+        tfAction.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tfActionActionPerformed(evt);
+            }
+        });
 
         btnDoAction.setText("Tell");
         btnDoAction.addActionListener(new java.awt.event.ActionListener() {
@@ -117,15 +145,17 @@ public class PladiQuestHUD extends javax.swing.JFrame implements UserInput, Outp
                 .addContainerGap()
                 .addComponent(btnUp)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnRight)
-                    .addComponent(btnLeft))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnLeft, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btnRight))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnDown)
                 .addContainerGap())
         );
 
         jPanel2Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnDown, btnLeft, btnRight, btnUp});
+
+        jScrollPane2.setViewportView(textOutputPane);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -135,13 +165,12 @@ public class PladiQuestHUD extends javax.swing.JFrame implements UserInput, Outp
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 498, Short.MAX_VALUE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(tfAction)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnDoAction)))
+                        .addComponent(tfAction, javax.swing.GroupLayout.DEFAULT_SIZE, 571, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnDoAction))
+                    .addComponent(jScrollPane2))
+                .addGap(18, 18, 18)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -149,10 +178,10 @@ public class PladiQuestHUD extends javax.swing.JFrame implements UserInput, Outp
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 126, Short.MAX_VALUE)))
+                        .addGap(0, 125, Short.MAX_VALUE))
+                    .addComponent(jScrollPane2))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tfAction, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -194,6 +223,11 @@ public class PladiQuestHUD extends javax.swing.JFrame implements UserInput, Outp
         currentUserInput = tfAction.getText();
         tfAction.setText("");
     }//GEN-LAST:event_btnDoActionActionPerformed
+
+    private void tfActionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfActionActionPerformed
+        currentUserInput = tfAction.getText();
+        tfAction.setText("");
+    }//GEN-LAST:event_tfActionActionPerformed
 
     private String currentUserInput = "";
 
@@ -240,8 +274,8 @@ public class PladiQuestHUD extends javax.swing.JFrame implements UserInput, Outp
     private javax.swing.JButton btnUp;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextArea outputTextArea;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTextPane textOutputPane;
     private javax.swing.JTextField tfAction;
     // End of variables declaration//GEN-END:variables
 
@@ -252,7 +286,11 @@ public class PladiQuestHUD extends javax.swing.JFrame implements UserInput, Outp
 
     @Override
     public void show(String message) {
-        outputTextArea.append(message + System.lineSeparator());
+        try {
+            editorKit.insertHTML(doc, doc.getLength(), System.lineSeparator() + "<html>" + message + "</html>", 0, 0, null);
+        } catch (BadLocationException | IOException ex) {
+            Logger.getLogger(PladiQuestHUD.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @Override

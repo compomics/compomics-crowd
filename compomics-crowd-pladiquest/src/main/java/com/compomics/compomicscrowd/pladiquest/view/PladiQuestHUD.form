@@ -44,19 +44,17 @@
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
-                  <EmptySpace min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
-                          <Component id="jScrollPane1" pref="498" max="32767" attributes="0"/>
-                          <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
-                          <Component id="jPanel2" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <Group type="102" attributes="0">
-                          <Component id="tfAction" max="32767" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="tfAction" pref="571" max="32767" attributes="0"/>
+                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Component id="btnDoAction" min="-2" max="-2" attributes="0"/>
                       </Group>
+                      <Component id="jScrollPane2" max="32767" attributes="0"/>
                   </Group>
+                  <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
+                  <Component id="jPanel2" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="-2" max="-2" attributes="0"/>
               </Group>
           </Group>
@@ -66,11 +64,11 @@
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="jScrollPane1" max="32767" attributes="0"/>
                       <Group type="102" attributes="0">
                           <Component id="jPanel2" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace min="0" pref="126" max="32767" attributes="0"/>
+                          <EmptySpace min="0" pref="125" max="32767" attributes="0"/>
                       </Group>
+                      <Component id="jScrollPane2" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
@@ -83,27 +81,16 @@
         </DimensionLayout>
       </Layout>
       <SubComponents>
-        <Container class="javax.swing.JScrollPane" name="jScrollPane1">
-          <AuxValues>
-            <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
-          </AuxValues>
-
-          <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
-          <SubComponents>
-            <Component class="javax.swing.JTextArea" name="outputTextArea">
-              <Properties>
-                <Property name="columns" type="int" value="20"/>
-                <Property name="lineWrap" type="boolean" value="true"/>
-                <Property name="rows" type="int" value="5"/>
-                <Property name="wrapStyleWord" type="boolean" value="true"/>
-              </Properties>
-            </Component>
-          </SubComponents>
-        </Container>
         <Component class="javax.swing.JTextField" name="tfAction">
           <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Tahoma" size="18" style="1"/>
+            </Property>
             <Property name="text" type="java.lang.String" value="&lt;Type Action Here&gt;"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="tfActionActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="btnDoAction">
           <Properties>
@@ -149,9 +136,9 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="btnUp" linkSize="2" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="btnRight" linkSize="2" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="btnLeft" linkSize="2" alignment="1" min="-2" max="-2" attributes="0"/>
+                          <Component id="btnRight" linkSize="2" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="btnDown" linkSize="2" min="-2" max="-2" attributes="0"/>
@@ -192,6 +179,17 @@
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnDownActionPerformed"/>
               </Events>
+            </Component>
+          </SubComponents>
+        </Container>
+        <Container class="javax.swing.JScrollPane" name="jScrollPane2">
+          <AuxValues>
+            <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
+          </AuxValues>
+
+          <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
+          <SubComponents>
+            <Component class="javax.swing.JTextPane" name="textOutputPane">
             </Component>
           </SubComponents>
         </Container>

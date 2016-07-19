@@ -1,0 +1,9 @@
+>LOOT|-|I can't find that [item] here.
+>LOOT|-|There is no sign of a(n) [item] in this place.
+>LOOT|-|I wish I had an [item] right now...
+>LOOT|+|Ooooh baby, I found a(n) [item]
+>LOOT|+|Swiggety swooty, I'm coming for that [item]
+>LOOT|+|You raise your hands in joy as you put the [item] in your backpack.
+>OPEN|+|All right, that [container] just flew open !
+>OPEN|+|The [container] popped right open.
+>OPEN|+|You eagerly managed to open up the [container].

@@ -28,6 +28,8 @@ public class ConsoleOutputChannel implements OutputChannel {
 
     @Override
     public void show(String message) {
+        //remove html tags
+        message = message.replaceAll("(?i)<td[^>]*>", " ").replaceAll("\\s+", " ").trim();
         System.out.println(message);
     }
 

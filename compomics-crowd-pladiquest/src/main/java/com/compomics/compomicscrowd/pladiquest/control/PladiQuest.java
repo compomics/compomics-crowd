@@ -5,6 +5,7 @@ import com.compomics.compomicscrowd.pladiquest.control.input.UserInput;
 import com.compomics.compomicscrowd.pladiquest.control.input.impl.CommandLineInput;
 import com.compomics.compomicscrowd.pladiquest.control.output.OutputChannel;
 import com.compomics.compomicscrowd.pladiquest.control.output.impl.ConsoleOutputChannel;
+import com.compomics.compomicscrowd.pladiquest.model.conversation.ConversationLibrary;
 import com.compomics.compomicscrowd.pladiquest.model.trigger.Trigger;
 import com.compomics.compomicscrowd.pladiquest.model.world.Container;
 import com.compomics.compomicscrowd.pladiquest.model.world.Creature;
@@ -25,8 +26,8 @@ public class PladiQuest {
     /**
      * The user input
      */
-     private UserInput input = new CommandLineInput();
-    //private UserInput input = hud;
+    // private UserInput input = new CommandLineInput();
+    private UserInput input = hud;
     /**
      * The Current user input
      */
@@ -38,12 +39,12 @@ public class PladiQuest {
     /**
      * The output channel
      */
-     private OutputChannel outputChannel = new ConsoleOutputChannel();
+    //private OutputChannel outputChannel = new ConsoleOutputChannel();
 
-    //private OutputChannel outputChannel = hud;
+    private OutputChannel outputChannel = hud;
 
     public PladiQuest(String filename) {
-    //    hud.setVisible(true);
+        hud.setVisible(true);
         File file = new File(filename);
         if (!file.canRead()) {
             outputChannel.show("Error opening file.  Exiting...");
@@ -52,6 +53,7 @@ public class PladiQuest {
         world = new World(file);
         world.setCurrentRoom("Entrance");
         boolean skip;
+        ConversationLibrary.getInstance();
         /* Print out the first entrance description, starting the game!*/
         outputChannel.show(world.getRooms().get(world.getCurrentRoom()).getDescription());
 
@@ -86,39 +88,39 @@ public class PladiQuest {
     /* Execute a user action or an action command from some <action> element that is not one of the "Special Commands"*/
     private void executeAction(String input) {
         String tempString;
+        String printTempString;
         Container tempContainer;
         String prefix;
         /* Movement */
         if (input.equals("n") || input.equals("s") || input.equals("e") || input.equals("w")) {
             move(input);
-        } /* Inventory */ else if (input.equals("i")) {
+        } /* Inventory */ else if (input.equals("i") || input.equals("inventory")) {
             inventory();
         } /* Take */ else if (!(prefix = ActionTerm.LOOT.getPrefix(input)).isEmpty() && input.split(" ").length >= 1) {
-            tempString = input.toLowerCase().replace(prefix, "").trim();
+            boolean found = false;
+            printTempString = input.replace(prefix, "").replaceAll("[^a-zA-Z\\s]", "").replaceAll("\\s+", " ").trim();
+            tempString = printTempString.toLowerCase();
             if ((world.getRooms().get(world.getCurrentRoom())).getItem().get(tempString) != null) {
                 world.getInventory().put(tempString, tempString);
                 Room tempRoom = (world.getRooms().get(world.getCurrentRoom()));
                 tempRoom.getItem().remove(tempString);
                 world.getRooms().put(tempRoom.getName(), tempRoom);
-                outputChannel.show("Item " + tempString + " added to inventory.");
+                found = true;
             } else {
                 /*Search all containers in the current room for the item!*/
-                boolean found = false;
                 for (String key : world.getRooms().get(world.getCurrentRoom()).getContainer().keySet()) {
                     tempContainer = world.getContainers().get(key);
                     if (tempContainer != null && tempContainer.isIsOpen() && tempContainer.getItem().get(tempString) != null) {
                         world.getInventory().put(tempString, tempString);
                         tempContainer.getItem().remove(tempString);
                         world.getContainers().put(tempContainer.getName(), tempContainer);
-                        outputChannel.show("Item " + tempString + " added to inventory.");
                         found = true;
                         break;
                     }
                 }
-                if (!found) {
-                    outputChannel.show("Error");
-                }
             }
+            String randomReply = ConversationLibrary.getInstance().getRandomReply(ActionTerm.LOOT, found);
+            outputChannel.show(randomReply.replace("[item]", "<b>" + printTempString + "</b>"));
         } /* Open Exit (you should be so lucky)*/ else if (!(prefix = ActionTerm.VICTORY.getPrefix(input)).isEmpty()) {
             if (world.getRooms().get(world.getCurrentRoom()).getType().equals("exit")) {
                 outputChannel.show("Game Over");
@@ -127,14 +129,16 @@ public class PladiQuest {
                 outputChannel.show("Error");
             }
         } /* Open a container */ else if (!(prefix = ActionTerm.OPEN.getPrefix(input)).isEmpty() && input.split(" ").length >= 1) {
-            tempString = input.toLowerCase().replace(prefix, "").trim();
+            printTempString = input.replace(prefix, "").replaceAll("[^a-zA-Z\\s]", "").replaceAll("\\s+", " ").trim();
+            tempString = printTempString.toLowerCase();
             String found = world.getRooms().get(world.getCurrentRoom()).getContainer().get(tempString);
             if (found != null) {
                 tempContainer = world.getContainers().get(tempString);
                 tempContainer.setIsOpen(true);
+                outputChannel.show(ConversationLibrary.getInstance().getRandomReply(ActionTerm.OPEN, true).replace("[container]", "<b>" + printTempString + "</b>"));
                 containerInventory(tempContainer.getItem(), tempString);
             } else {
-                outputChannel.show("Error");
+                outputChannel.show(ConversationLibrary.getInstance().getRandomReply(ActionTerm.LOOT, false).replace("[container]", "<b>" + printTempString + "</b>"));
             }
         } /* Read an object */ else if (!(prefix = ActionTerm.READ.getPrefix(input)).isEmpty() && input.split(" ").length > 1) {
             tempString = input.toLowerCase().replace(prefix, "").trim();
@@ -172,7 +176,7 @@ public class PladiQuest {
                 outputChannel.show("Error");
             }
         } /* Turn on an item*/ else if (!(prefix = ActionTerm.ACTIVATE.getPrefix(input)).isEmpty()) {
-            tempString = input.replace(prefix,"").trim();
+            tempString = input.replace(prefix, "").trim();
             Item tempItem;
             if (world.getInventory().get(tempString) != null) {
                 tempItem = world.getItems().get(tempString);
