@@ -1,6 +1,6 @@
 package com.compomics.compomicscrowd.pladiquest.control;
 
-import com.compomics.compomicscrowd.pladiquest.control.input.ActionTerm;
+import com.compomics.compomicscrowd.pladiquest.model.action.ActionTerm;
 import com.compomics.compomicscrowd.pladiquest.control.input.UserInput;
 import com.compomics.compomicscrowd.pladiquest.control.input.WorldFactory;
 import com.compomics.compomicscrowd.pladiquest.control.output.OutputChannel;

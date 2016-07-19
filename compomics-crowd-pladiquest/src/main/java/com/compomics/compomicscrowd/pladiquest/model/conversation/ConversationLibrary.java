@@ -1,6 +1,6 @@
 package com.compomics.compomicscrowd.pladiquest.model.conversation;
 
-import com.compomics.compomicscrowd.pladiquest.control.input.ActionTerm;
+import com.compomics.compomicscrowd.pladiquest.model.action.ActionTerm;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;

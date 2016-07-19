@@ -56,6 +56,7 @@ public class WorldFactory {
 
     private WorldFactory() {
         fileNames.put("Secret Treasure Room", "awesome_treasure_room.xml");
+        fileNames.put("Gate_Room", "trap_room_1.xml");
     }
 
     public static WorldFactory getInstance() {
@@ -120,7 +121,7 @@ public class WorldFactory {
     }
 
     public void loadRoom(String fileName, World world) throws ParserConfigurationException, SAXException, IOException {
-        try (InputStream xmlStream = new ClassPathResource(fileName).getInputStream()) {
+        try (InputStream xmlStream = new ClassPathResource("rooms/"+fileName).getInputStream()) {
             DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
             Document doc = builder.parse(xmlStream);
             loadFromXML(world, doc);

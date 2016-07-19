@@ -74,7 +74,6 @@ public class PladiQuestHUD extends javax.swing.JFrame implements UserInput, Outp
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
         tfAction.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-        tfAction.setText("<Type Action Here>");
         tfAction.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 tfActionActionPerformed(evt);

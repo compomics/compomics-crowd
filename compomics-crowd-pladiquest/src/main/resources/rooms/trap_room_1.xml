@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<map>
+    <room>
+        <name>Gate_Room</name>
+        <description>You've passed through the gate and arrive in a narrow corridor. Oh no !!!! The gates collapsed. Traps like these usually have a switch hidden somewhere...</description>
+        <trigger>
+            <type>permanent</type>
+            <command>n</command>
+            <condition>
+                <object>statue</object>
+                <status>not pressed</status>
+            </condition>
+            <print>These gates are really bolted shut...There must be a hidden switch somewhere.</print>
+        </trigger>
+        <trigger>
+            <type>permanent</type>
+            <command>e</command>
+            <condition>
+                <object>statue</object>
+                <status>not pressed</status>
+            </condition>
+            <print>These gates are really bolted shut...There must be a hidden switch somewhere.</print>
+        </trigger>
+        <trigger>
+            <type>permanent</type>
+            <command>s</command>
+            <condition>
+                <object>statue</object>
+                <status>not pressed</status>
+            </condition>
+            <print>These gates are really bolted shut...There must be a hidden switch somewhere.</print>
+        </trigger>
+        <trigger>
+            <type>permanent</type>
+            <command>w</command>
+            <condition>
+                <object>statue</object>
+                <status>not pressed</status>
+            </condition>
+            <print>These gates are really bolted shut...There must be a hidden switch somewhere.</print>
+        </trigger>
+        <trigger>
+            <type>permanent</type>
+            <command>inspect statue</command>
+            <condition>
+                <object>statue</object>
+                <status>not pressed</status>
+            </condition>
+            <action>Update statue to pressed</action>
+            <print>There's a switch on the back of this statue's book! As you press it, the gates shriek as they slowly bend back into place. </print>
+        </trigger>
+        <container>statue</container>
+    </room>  
+    <container>
+        <name>statue</name>
+        <status>not pressed</status>
+    </container> 
+</map>
