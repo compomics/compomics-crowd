@@ -39,13 +39,13 @@ import org.xml.sax.SAXException;
 public class World {
 
     /*Hashmaps to store the instance of the game*/
-    private LinkedHashMap<String, Room> Rooms = new LinkedHashMap<>();
-    private LinkedHashMap<String, Item> Items = new LinkedHashMap<>();
-    private LinkedHashMap<String, Container> Containers = new LinkedHashMap<>();
-    private LinkedHashMap<String, GameObject> Objects = new LinkedHashMap<>();
-    private LinkedHashMap<String, Creature> Creatures = new LinkedHashMap<>();
+    private LinkedHashMap<String, Room> rooms = new LinkedHashMap<>();
+    private LinkedHashMap<String, Item> items = new LinkedHashMap<>();
+    private LinkedHashMap<String, Container> containers = new LinkedHashMap<>();
+    private LinkedHashMap<String, GameObject> objects = new LinkedHashMap<>();
+    private LinkedHashMap<String, Creature> creatures = new LinkedHashMap<>();
     private Player player = new Player();
-    private LinkedHashMap<String, String> ObjectLookup = new LinkedHashMap<>();
+    private LinkedHashMap<String, String> objectLookup = new LinkedHashMap<>();
     private String currentRoom;
     private File file;
 
@@ -87,43 +87,43 @@ public class World {
     }
 
     public HashMap<String, Room> getRooms() {
-        return Rooms;
+        return rooms;
     }
 
     public void setRooms(LinkedHashMap<String, Room> Rooms) {
-        this.Rooms = Rooms;
+        this.rooms = Rooms;
     }
 
     public HashMap<String, Item> getItems() {
-        return Items;
+        return items;
     }
 
     public void setItems(LinkedHashMap<String, Item> Items) {
-        this.Items = Items;
+        this.items = Items;
     }
 
     public HashMap<String, Container> getContainers() {
-        return Containers;
+        return containers;
     }
 
     public void setContainers(LinkedHashMap<String, Container> Containers) {
-        this.Containers = Containers;
+        this.containers = Containers;
     }
 
     public HashMap<String, GameObject> getObjects() {
-        return Objects;
+        return objects;
     }
 
     public void setObjects(LinkedHashMap<String, GameObject> Objects) {
-        this.Objects = Objects;
+        this.objects = Objects;
     }
 
     public HashMap<String, Creature> getCreatures() {
-        return Creatures;
+        return creatures;
     }
 
     public void setCreatures(LinkedHashMap<String, Creature> Creatures) {
-        this.Creatures = Creatures;
+        this.creatures = Creatures;
     }
 
     public HashMap<String, String> getInventory() {
@@ -135,11 +135,11 @@ public class World {
     }
 
     public HashMap<String, String> getObjectLookup() {
-        return ObjectLookup;
+        return objectLookup;
     }
 
     public void setObjectLookup(LinkedHashMap<String, String> ObjectLookup) {
-        this.ObjectLookup = ObjectLookup;
+        this.objectLookup = ObjectLookup;
     }
 
     public String getCurrentRoom() {

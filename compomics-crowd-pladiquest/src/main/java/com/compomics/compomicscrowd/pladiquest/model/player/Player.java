@@ -23,18 +23,18 @@ import java.util.HashMap;
  */
 public class Player {
 
-    private HashMap<String, String> Inventory = new HashMap<>();
+    private HashMap<String, String> inventory = new HashMap<>();
 
     public Player() {
 
     }
 
     public HashMap<String, String> getInventory() {
-        return Inventory;
+        return inventory;
     }
 
     public void setInventory(HashMap<String, String> Inventory) {
-        this.Inventory = Inventory;
+        this.inventory = Inventory;
     }
 
 }

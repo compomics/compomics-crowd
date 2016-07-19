@@ -47,6 +47,7 @@ public class PladiQuest {
     private OutputChannel outputChannel = hud;
 
     public PladiQuest(String filename) {
+        hud.setLocationRelativeTo(null);
         hud.setVisible(true);
         File file = new File(filename);
         if (!file.canRead()) {
@@ -399,6 +400,7 @@ public class PladiQuest {
             if (!(destinationRoom instanceof Wall)) {
                 world.setCurrentRoom(destination);
                 outputChannel.show(world.getRooms().get(world.getCurrentRoom()).getDescription());
+                
             } else {
                 outputChannel.show("There seems to be a wall that way...");
             }

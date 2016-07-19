@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.text.BadLocationException;
+import javax.swing.text.DefaultCaret;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
@@ -154,6 +155,7 @@ public class PladiQuestHUD extends javax.swing.JFrame implements UserInput, Outp
 
         jPanel2Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnDown, btnLeft, btnRight, btnUp});
 
+        textOutputPane.setEditable(false);
         jScrollPane2.setViewportView(textOutputPane);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -286,7 +288,10 @@ public class PladiQuestHUD extends javax.swing.JFrame implements UserInput, Outp
     @Override
     public void show(String message) {
         try {
-            editorKit.insertHTML(doc, doc.getLength(), System.lineSeparator() + "<html>" + message + "</html>", 0, 0, null);
+            editorKit.insertHTML(doc, doc.getLength(), "<html>" + message + "</html>" + System.lineSeparator(), 0, 0, null);
+            ((DefaultCaret) textOutputPane.getCaret()).setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
+            textOutputPane.setCaretPosition(textOutputPane.getDocument().getLength());
+            // textOutputPane.setCaretPosition(textOutputPane.getText().length());
         } catch (BadLocationException | IOException ex) {
             Logger.getLogger(PladiQuestHUD.class.getName()).log(Level.SEVERE, null, ex);
         }
