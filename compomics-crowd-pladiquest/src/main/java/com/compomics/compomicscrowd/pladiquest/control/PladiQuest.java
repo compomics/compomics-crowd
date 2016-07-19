@@ -411,6 +411,8 @@ public class PladiQuest {
             Room latestRoom = world.getLatestRoom();
             if (latestRoom == null || latestRoom instanceof Wall) {
                 outputChannel.show("There seems to be a wall that way...");
+            }else{
+                move(direction);
             }
         }
     }
