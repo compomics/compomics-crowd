@@ -56,7 +56,6 @@ public class PladiQuest {
         ConversationLibrary.getInstance();
         /* Print out the first entrance description, starting the game!*/
         outputChannel.show(world.getRooms().get(world.getCurrentRoom()).getDescription());
-
         /*Start the entire game loop*/
         while (true) {
             if (currentUserInput.isEmpty()) {
@@ -393,7 +392,8 @@ public class PladiQuest {
         if (destination != null) {
             world.setCurrentRoom(destination);
             outputChannel.show(world.getRooms().get(world.getCurrentRoom()).getDescription());
-        } else {
+        } else  {
+            //generate and add a new room
             outputChannel.show("Can't go that way.");
         }
     }
@@ -522,9 +522,9 @@ public class PladiQuest {
     public void containerInventory(HashMap<String, String> Container, String Name) {
         String output = "";
         if (Container.isEmpty()) {
-            outputChannel.show(Name + " is empty");
+            outputChannel.show("The " + Name + " is empty");
         } else {
-            outputChannel.show(Name + " contains ");
+            outputChannel.show("The " + Name + " contains ");
             for (String key : Container.keySet()) {
                 output += key + ", ";
             }
