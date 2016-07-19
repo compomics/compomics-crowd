@@ -1,5 +1,6 @@
 package com.compomics.compomicscrowd.pladiquest.control;
 
+import com.compomics.compomicscrowd.pladiquest.control.input.ActionTerm;
 import com.compomics.compomicscrowd.pladiquest.control.input.UserInput;
 import com.compomics.compomicscrowd.pladiquest.control.input.impl.CommandLineInput;
 import com.compomics.compomicscrowd.pladiquest.control.output.OutputChannel;
@@ -10,21 +11,26 @@ import com.compomics.compomicscrowd.pladiquest.model.world.Creature;
 import com.compomics.compomicscrowd.pladiquest.model.world.Item;
 import com.compomics.compomicscrowd.pladiquest.model.world.Room;
 import com.compomics.compomicscrowd.pladiquest.model.world.World;
+import com.compomics.compomicscrowd.pladiquest.view.PladiQuestHUD;
 import java.io.File;
 import org.w3c.dom.*;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /* And away we go*/
 public class PladiQuest {
 
+    PladiQuestHUD hud = new PladiQuestHUD();
     /**
      * The user input
      */
-    private UserInput input = new CommandLineInput();
+     private UserInput input = new CommandLineInput();
+    //private UserInput input = hud;
     /**
-     * The latest user input
+     * The Current user input
      */
-    private String currentUserInput;
+    private String currentUserInput = "";
     /**
      * The current pladipus world
      */
@@ -32,9 +38,12 @@ public class PladiQuest {
     /**
      * The output channel
      */
-    private OutputChannel outputChannel = new ConsoleOutputChannel();
+     private OutputChannel outputChannel = new ConsoleOutputChannel();
+
+    //private OutputChannel outputChannel = hud;
 
     public PladiQuest(String filename) {
+    //    hud.setVisible(true);
         File file = new File(filename);
         if (!file.canRead()) {
             outputChannel.show("Error opening file.  Exiting...");
@@ -48,34 +57,44 @@ public class PladiQuest {
 
         /*Start the entire game loop*/
         while (true) {
-            currentUserInput = input.getUserInput();
-            /*Now that we have the user command, check the input*/
-            skip = checkAllTriggers();
-            /*We only skip if a matched trigger overwrites the execution of a command*/
-            if (skip) {
-                continue;
+            if (currentUserInput.isEmpty()) {
+                try {
+                    Thread.sleep(200);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(PladiQuest.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                currentUserInput = input.getNextUserInput();
+            } else {
+                /*Now that we have the user command, check the input*/
+                skip = checkAllTriggers();
+                /*We only skip if a matched trigger overwrites the execution of a command*/
+                if (skip) {
+                    input.resetUserInput();
+                    currentUserInput = "";
+                    continue;
+                }
+                /* If we haven't skipped, perform the user action*/
+                executeAction(currentUserInput);
+                /* Clear the user input, and check the triggers again (various states have changed, gnomes need to be found!*/
+                input.resetUserInput();
+                currentUserInput = "";
+                checkAllTriggers();
             }
-            /* If we haven't skipped, perform the user action*/
-            executeAction(currentUserInput);
-            /* Clear the user input, and check the triggers again (various states have changed, gnomes need to be found!*/
-            currentUserInput = "";
-            checkAllTriggers();
         }
     }
 
     /* Execute a user action or an action command from some <action> element that is not one of the "Special Commands"*/
     private void executeAction(String input) {
-
         String tempString;
         Container tempContainer;
-
+        String prefix;
         /* Movement */
         if (input.equals("n") || input.equals("s") || input.equals("e") || input.equals("w")) {
             move(input);
         } /* Inventory */ else if (input.equals("i")) {
             inventory();
-        } /* Take */ else if (input.startsWith("take") && input.split(" ").length >= 1) {
-            tempString = input.split(" ")[1];
+        } /* Take */ else if (!(prefix = ActionTerm.LOOT.getPrefix(input)).isEmpty() && input.split(" ").length >= 1) {
+            tempString = input.toLowerCase().replace(prefix, "").trim();
             if ((world.getRooms().get(world.getCurrentRoom())).getItem().get(tempString) != null) {
                 world.getInventory().put(tempString, tempString);
                 Room tempRoom = (world.getRooms().get(world.getCurrentRoom()));
@@ -100,15 +119,15 @@ public class PladiQuest {
                     outputChannel.show("Error");
                 }
             }
-        } /* Open Exit (you should be so lucky)*/ else if (input.equals("open exit")) {
+        } /* Open Exit (you should be so lucky)*/ else if (!(prefix = ActionTerm.VICTORY.getPrefix(input)).isEmpty()) {
             if (world.getRooms().get(world.getCurrentRoom()).getType().equals("exit")) {
                 outputChannel.show("Game Over");
                 System.exit(0);
             } else {
                 outputChannel.show("Error");
             }
-        } /* Open a container */ else if (input.startsWith("open") && input.split(" ").length >= 1) {
-            tempString = input.split(" ")[1];
+        } /* Open a container */ else if (!(prefix = ActionTerm.OPEN.getPrefix(input)).isEmpty() && input.split(" ").length >= 1) {
+            tempString = input.toLowerCase().replace(prefix, "").trim();
             String found = world.getRooms().get(world.getCurrentRoom()).getContainer().get(tempString);
             if (found != null) {
                 tempContainer = world.getContainers().get(tempString);
@@ -117,8 +136,8 @@ public class PladiQuest {
             } else {
                 outputChannel.show("Error");
             }
-        } /* Read an object */ else if (input.startsWith("read") && input.split(" ").length >= 1) {
-            tempString = input.split(" ")[1];
+        } /* Read an object */ else if (!(prefix = ActionTerm.READ.getPrefix(input)).isEmpty() && input.split(" ").length > 1) {
+            tempString = input.toLowerCase().replace(prefix, "").trim();
             Item tempItem;
             if (world.getInventory().get(tempString) != null) {
                 tempItem = world.getItems().get(tempString);
@@ -130,8 +149,8 @@ public class PladiQuest {
             } else {
                 outputChannel.show("Error");
             }
-        } /* Drop an item*/ else if (input.startsWith("drop") && input.split(" ").length >= 1) {
-            tempString = input.split(" ")[1];
+        } /* Drop an item*/ else if (!(prefix = ActionTerm.DROP.getPrefix(input)).isEmpty() && input.split(" ").length >= 1) {
+            tempString = input.toLowerCase().replace(prefix, "").trim();
             if (world.getInventory().get(tempString) != null) {
                 Room tempRoom = world.getRooms().get(world.getCurrentRoom());
                 tempRoom.getItem().put(tempString, tempString);
@@ -141,7 +160,7 @@ public class PladiQuest {
             } else {
                 outputChannel.show("Error");
             }
-        } /* Put an item somewhere */ else if (input.startsWith("put") && input.split(" ").length >= 4) {
+        } /* Put an item somewhere */ else if (!(prefix = ActionTerm.PUT.getPrefix(input)).isEmpty()) {
             tempString = input.split(" ")[1];
             String destination = input.split(" ")[3];
             if (world.getRooms().get(world.getCurrentRoom()).getContainer().get(destination) != null && world.getContainers().get(destination).isIsOpen() && world.getInventory().get(tempString) != null) {
@@ -152,8 +171,8 @@ public class PladiQuest {
             } else {
                 outputChannel.show("Error");
             }
-        } /* Turn on an item*/ else if (input.startsWith("turn on") && input.split(" ").length >= 3) {
-            tempString = input.split(" ")[2];
+        } /* Turn on an item*/ else if (!(prefix = ActionTerm.ACTIVATE.getPrefix(input)).isEmpty()) {
+            tempString = input.replace(prefix,"").trim();
             Item tempItem;
             if (world.getInventory().get(tempString) != null) {
                 tempItem = world.getItems().get(tempString);
@@ -172,7 +191,7 @@ public class PladiQuest {
                 outputChannel.show("Error");
             }
 
-        } /* Attempt an attack, you feeling lucky?*/ else if (input.startsWith("attack") && input.split(" ").length >= 4) {
+        } /* Attempt an attack, you feeling lucky?*/ else if (!(prefix = ActionTerm.ATTACK.getPrefix(input)).isEmpty() && input.split(" ").length >= 4) {
             tempString = input.split(" ")[1];
             Creature tempCreature;
             String weapon = input.split(" ")[3];
@@ -501,7 +520,7 @@ public class PladiQuest {
         if (Container.isEmpty()) {
             outputChannel.show(Name + " is empty");
         } else {
-            System.out.print(Name + " contains ");
+            outputChannel.show(Name + " contains ");
             for (String key : Container.keySet()) {
                 output += key + ", ";
             }
@@ -534,6 +553,6 @@ public class PladiQuest {
 
     /* I love how basic java main functions are sometimes.*/
     public static void main(String[] args) {
-        PladiQuest zork = new PladiQuest("F:\\compomics-crowd\\compomics-crowd\\compomics-crowd-pladiquest\\src\\main\\resources\\sampleGame.xml");
+        PladiQuest zork = new PladiQuest("C:\\Users\\compomics\\Documents\\NetBeansProjects\\compomics-crowd\\compomics-crowd-pladiquest\\src\\main\\resources\\sampleGame.xml");
     }
 }

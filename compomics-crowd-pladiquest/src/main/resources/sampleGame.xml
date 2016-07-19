@@ -42,11 +42,21 @@
       </condition>
       <print>lock needs a key... not to mention you don't want to get too close to that side of the room... there's something in that corner...</print>
     </trigger>
+	    <trigger>
+      <command>n</command>
+      <type>permanent</type>
+      <condition>
+        <object>kitty box</object>
+        <status>alive</status>
+      </condition>
+      <print>You can't just leave us ignorant about the state of the cat...</print>
+    </trigger>
   </room>
   <room>
     <type>exit</type>
     <name>Staircase</name>
-    <description>You found the exit!</description>
+       <description>This is the exit. A fancy chest is shining in the middle of the room !</description>
+    <container>fancy chest</container>
     <border>
       <name>MainCavern</name>
       <direction>south</direction>
@@ -74,9 +84,27 @@
     <name>key</name>
     <writing>Exit</writing>
   </item>
+  <item>
+    <name>gold coins</name>
+    <writing>A fancy reward is yours ! 1000 coins</writing>
+  </item>
+  <item>
+    <name>kittybox</name>
+    <writing>You could inspect this box to solve Shroedingers riddle and make humanity sane again !</writing>
+	<status>alive</status>
+    <turnon>
+      <print>You carefuly open the box...It's completely filled with catisfactions. You hear a soft purring in the distance !</print>
+      <action>Update kittybox to dead</action>
+    </turnon>
+  </item>
+  <container>
+       <name>fancy chest</name>
+       <item>gold coins</item>
+  </container>
   <container>
     <name>chest</name>
     <item>explosive</item>
+	<item>kittybox</item>
   </container>
   <container>
     <name>lock</name>

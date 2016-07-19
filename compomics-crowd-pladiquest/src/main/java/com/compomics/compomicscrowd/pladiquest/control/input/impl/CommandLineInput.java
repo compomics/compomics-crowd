@@ -28,14 +28,29 @@ public class CommandLineInput implements UserInput {
      * A scanner instance
      */
     private final Scanner source;
+    /**
+     * The latest user input
+     */
+    private String currentUserInput;
 
     public CommandLineInput() {
         source = new Scanner(System.in);
     }
 
     @Override
-    public String getUserInput() {
+    public String getNextUserInput() {
         //scanner automatically waits for input
-        return source.nextLine();
+        currentUserInput = source.nextLine();
+        return getCurrentUserInput();
+    }
+
+    @Override
+    public String getCurrentUserInput() {
+        return currentUserInput;
+    }
+
+    @Override
+    public void resetUserInput() {
+     currentUserInput="";
     }
 }

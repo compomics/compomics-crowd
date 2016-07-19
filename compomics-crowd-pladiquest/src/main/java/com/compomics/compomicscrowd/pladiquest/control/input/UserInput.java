@@ -25,5 +25,9 @@ public interface UserInput {
      * Gets the latest user input
      * @return 
      */
-    public String getUserInput();
+    public String getNextUserInput();
+    
+    public String getCurrentUserInput();
+    
+    public void resetUserInput();
 }
