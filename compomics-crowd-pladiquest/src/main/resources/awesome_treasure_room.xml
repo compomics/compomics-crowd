@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<map>
+    <room>
+        <name>Secret Treasure Room</name>
+        <description>You enter a solid gold room with a statue of Kenneth. There be treasure here, lads !</description>
+        <container>chest</container>
+    </room>
+    <container>
+        <name>chest</name>
+        <item>Kenneth's Tome</item>
+    </container>
+    <item>
+        <name>Kenneth's Tome</name>
+        <writing>The secret to success is to those who are not seeking it.</writing>
+    </item>
+</map>

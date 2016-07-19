@@ -2,22 +2,25 @@ package com.compomics.compomicscrowd.pladiquest.control;
 
 import com.compomics.compomicscrowd.pladiquest.control.input.ActionTerm;
 import com.compomics.compomicscrowd.pladiquest.control.input.UserInput;
-import com.compomics.compomicscrowd.pladiquest.control.input.impl.CommandLineInput;
+import com.compomics.compomicscrowd.pladiquest.control.input.WorldFactory;
 import com.compomics.compomicscrowd.pladiquest.control.output.OutputChannel;
-import com.compomics.compomicscrowd.pladiquest.control.output.impl.ConsoleOutputChannel;
 import com.compomics.compomicscrowd.pladiquest.model.conversation.ConversationLibrary;
 import com.compomics.compomicscrowd.pladiquest.model.trigger.Trigger;
 import com.compomics.compomicscrowd.pladiquest.model.world.Container;
 import com.compomics.compomicscrowd.pladiquest.model.world.Creature;
 import com.compomics.compomicscrowd.pladiquest.model.world.Item;
 import com.compomics.compomicscrowd.pladiquest.model.world.Room;
+import com.compomics.compomicscrowd.pladiquest.model.world.Wall;
 import com.compomics.compomicscrowd.pladiquest.model.world.World;
 import com.compomics.compomicscrowd.pladiquest.view.PladiQuestHUD;
 import java.io.File;
+import java.io.IOException;
 import org.w3c.dom.*;
 import java.util.*;
+import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.springframework.core.io.ClassPathResource;
 
 /* And away we go*/
 public class PladiQuest {
@@ -388,13 +391,25 @@ public class PladiQuest {
             fullDirection = "west";
         }
 
-        destination = (world.getRooms().get(world.getCurrentRoom())).getBorder().get(fullDirection);
+        Room currentRoom =world.getRooms().get(world.getCurrentRoom());
+        destination = currentRoom.getBorder().get(fullDirection);
+
         if (destination != null) {
-            world.setCurrentRoom(destination);
-            outputChannel.show(world.getRooms().get(world.getCurrentRoom()).getDescription());
-        } else  {
-            //generate and add a new room
-            outputChannel.show("Can't go that way.");
+            Room destinationRoom = world.getRooms().get(destination);
+            if (!(destinationRoom instanceof Wall)) {
+                world.setCurrentRoom(destination);
+                outputChannel.show(world.getRooms().get(world.getCurrentRoom()).getDescription());
+            } else {
+                outputChannel.show("There seems to be a wall that way...");
+            }
+        } else {
+            //generate and add a new room at random?
+            WorldFactory.getInstance().loadRandomRoom(world, fullDirection);
+            //if the newest room is a wall...
+            Room latestRoom = world.getLatestRoom();
+            if (latestRoom == null || latestRoom instanceof Wall) {
+                outputChannel.show("There seems to be a wall that way...");
+            }
         }
     }
 
@@ -556,7 +571,8 @@ public class PladiQuest {
     }
 
     /* I love how basic java main functions are sometimes.*/
-    public static void main(String[] args) {
-        PladiQuest zork = new PladiQuest("C:\\Users\\compomics\\Documents\\NetBeansProjects\\compomics-crowd\\compomics-crowd-pladiquest\\src\\main\\resources\\sampleGame.xml");
+    public static void main(String[] args) throws IOException {
+        File file = new ClassPathResource("sampleGame.xml").getFile();
+        PladiQuest zork = new PladiQuest(file.getAbsolutePath());
     }
 }

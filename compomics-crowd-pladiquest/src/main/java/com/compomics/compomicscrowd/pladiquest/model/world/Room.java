@@ -16,7 +16,16 @@
 package com.compomics.compomicscrowd.pladiquest.model.world;
 
 import com.compomics.compomicscrowd.pladiquest.model.GameObject;
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
 
 /**
  *
@@ -91,4 +100,9 @@ public class Room extends GameObject {
         this.creature = creature;
     }
 
+    @Override
+    public String toString(){
+        return name;
+    }
+    
 }
